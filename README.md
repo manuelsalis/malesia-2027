@@ -2,30 +2,15 @@
 
 Sito in una sola pagina statica (`index.html`), con itinerario di 17 giornate, budget, prenotazioni, foto/fallback, login Google e sincronizzazione Firebase opzionale. Tutto HTML, CSS e JavaScript è contenuto nel singolo file, senza build step.
 
-## IMPORTANTE: configurazione Firebase indispensabile
+## Restyling Dark Premium
 
-La configurazione fornita nel prompt includeva `authDomain: "://firebaseapp.com"` e `databaseURL: "https://firebasedatabase.app"`: non sono URL completi e non possono funzionare.
+Il sito usa un tema scuro completo con accenti champagne/salvia, superfici stratificate, menu mobile animato, microinterazioni e controlli da almeno 48 px. Le animazioni rispettano la preferenza per il movimento ridotto. Dettagli, file separati opzionali e risultati dei controlli sono in [RESTYLING.md](RESTYLING.md).
 
-Nel file `index.html` l'`authDomain` è stato ricostruito usando il `projectId` fornito:
+Per pubblicare, sostituisci `index.html`. Nessun processo di build è richiesto.
 
-```js
-authDomain: 'malesia-2027.firebaseapp.com'
-```
+## Configurazione Firebase esistente
 
-**Devi sostituire esattamente questo valore:**
-
-```js
-databaseURL: 'INSERISCI_DATABASE_URL_DA_FIREBASE_CONSOLE'
-```
-
-con **l'URL esatto** che compare in **Firebase Console > Build > Realtime Database > Data**. Può avere uno dei formati:
-
-- `https://NOME_DATABASE.firebaseio.com`
-- `https://NOME_DATABASE.REGIONE.firebasedatabase.app`
-
-Non indovinare la regione o il nome: usa l'URL che Firebase mostra nel tuo progetto.
-
-Senza URL corretto il sito continua a funzionare **solo in locale**, indicando chiaramente che il cloud non è configurato. Non è stato possibile verificare un accesso al database reale perché manca il suo URL preciso.
+Nel sorgente attuale sono già presenti `authDomain: 'malesia-2027.firebaseapp.com'` e `databaseURL: 'https://malesia-2027-default-rtdb.europe-west1.firebasedatabase.app'`. Il restyling li conserva. Non è stata verificata una connessione autenticata al progetto reale.
 
 ## Attiva Google Login
 
@@ -70,7 +55,9 @@ Se cancelli i dati del browser o usi una modalità privata che non mantiene `loc
 
 Le foto di Wikimedia Commons vengono richieste online. Quando non si caricano sono usati fallback illustrati incorporati nella pagina; non sono mostrati insieme alle foto correttamente caricate.
 
-## Verifiche della versione 4.0
+## Verifiche precedenti della versione 4.0 (documentazione storica)
+
+I risultati seguenti erano già riportati nella repository e **non costituiscono verifiche del nuovo restyling**. Per il nuovo lavoro vedere [RESTYLING.md](RESTYLING.md).
 
 - Controllo sintattico JavaScript (`node --check`).
 - 17 tappe numerate e tre card header presenti.
