@@ -4,8 +4,8 @@
     ".write": false,
     "viaggio_malesia_2027": {
       "stato": {
-        ".read": "auth != null && auth.token.email_verified === true && (auth.token.email === 'EMAIL_1@example.com' || auth.token.email === 'EMAIL_2@example.com')",
-        ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'EMAIL_1@example.com' || auth.token.email === 'EMAIL_2@example.com')"
+        ".read": "auth != null && auth.token.email_verified === true && (auth.token.email === 'm.salis@vestopazzo.it')",
+        ".write": "auth != null && auth.token.email_verified === true && (auth.token.email === 'm.salis@vestopazzo.it')"
       }
     }
   }
