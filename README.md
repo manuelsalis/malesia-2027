@@ -1,57 +1,65 @@
-# Malesia 2027 — Single-page travel companion
+# Malesia 2027 — Travel Companion · Edition 3.0
 
-Un unico sito statico e responsive che riunisce l’itinerario fotografico, le 17 giornate, voli, alloggi, budget, risparmio e checklist prenotazioni.
+Un'unica pagina HTML responsive (CSS e JavaScript incorporati) per il viaggio tra **Kuala Lumpur, Kuching/Borneo e Perhentian**. Il progetto contiene itinerario fotografico, 17 giornate, voli, hotel, calcolo del budget, checklist prenotazioni e trasferimento dei dati tra PC e smartphone.
 
-### Premium Edition 2.0 — novembre 2026
+## Le novità della versione 3.0
 
-- Nuova direzione artistica con profondità 3D, carte sovrapposte, vetro satinato, sfondi atmosferici e tre palette distinte (city, rainforest, island).
-- Animazioni di ingresso, scroll progress, transizioni, effetto tilt su desktop e animazioni disattivate per utenti con `prefers-reduced-motion`.
-- Galleria fotografica con visualizzazione ingrandita, frecce avanti/indietro e navigazione con tastiera.
-- **Giorni 15 → 16 → 17** in una sequenza verticale, senza anomalie di posizionamento. Aggiunta la voce **Rientro** nella navigazione.
-- Voli di ritorno secondo le informazioni condivise: **15 luglio 2027, KUL 21:00 → DOH 23:30 (QR4990)**; **16 luglio, DOH 09:15 → FCO 14:15 (QR131)**, scalo a Doha 9h45. Tutti orari locali da verificare sulla prenotazione.
-- SVG illustrati originali incorporati come fallback delle fotografie: se Wikimedia Commons non è raggiungibile, la pagina rimane curata e leggibile.
-- Layout responsive verificato a larghezze da 320 px a 1920 px, nessuno scorrimento orizzontale.
+- **Foto e fallback esclusivi:** quando una foto reale viene caricata, il JavaScript marca la sua scheda come `has-photo`, il CSS rimuove completamente l'illustrazione di riserva e nasconde il contenuto di fallback. In caso di errore compare solo il disegno incorporato. La logica gestisce immagini già in cache e sorgenti cambiate successivamente.
+- **Hero corretto:** le tre card delle destinazioni sono celle indipendenti di CSS Grid, non elementi sovrapposti e posizionati in assoluto. Le leggere inclinazioni sono puramente decorative e rispettano i dispositivi touch e `prefers-reduced-motion`.
+- **Design system coerente:** tipografia, raggi, ombre, spaziature e pulsanti rifiniti per l'intero sito. Icone di interfaccia raccolte in un solo sprite **SVG inline**; non è richiesta alcuna libreria esterna.
+- **Cronologia finale:** la scheda dell'hotel per la notte 14–15 luglio si trova subito dopo il giorno 15 e prima dei giorni 16 e 17. Il volo di ritorno parte da **Kuala Lumpur (KUL) il 15 luglio 2027 alle 21:00**, con scalo a **Doha (DOH)** e arrivo a **Roma Fiumicino (FCO) il 16 luglio alle 14:15**. Tutti gli orari sono locali e vanno verificati sul biglietto.
+- **Trasferimento dispositivi:** nuovo pannello per JSON, condivisione nativa del file quando disponibile, copia del link compresso, incolla di JSON o link, validazione rigorosa e conferma prima di sostituire dati già salvati. I vecchi JSON del kit sono compatibili.
 
+## Come usare `index.html`
 
-## Aprire il sito
+Apri `index.html` direttamente in un browser oppure pubblicalo su GitHub Pages. Tutto il codice applicativo è nel singolo file; non servono server, npm, React o database. Le **fotografie** e i font decorativi sono richiesti a servizi esterni; se manca Internet, le illustrazioni e i font di sistema permettono comunque di leggere il programma e usare il budget.
 
-- Apri `index.html` nel browser. Per visualizzare le fotografie vere di Wikimedia Commons serve una connessione Internet. Se non disponibile, vengono mostrati sfondi illustrati di riserva inclusi in `index.html`.
-- Non serve installare Node, React, un database o altri strumenti: CSS e JavaScript sono già inclusi nell'unico `index.html`.
-- Le **fotografie** e i **font web** vengono caricati da servizi esterni e richiedono Internet. Gli sfondi illustrati incorporati e i font di sistema mantengono la pagina utilizzabile anche senza di essi.
+Il budget, le spese, gli stati **prenotato/pagato** e le relative note si salvano in `localStorage`. La chiave resta **`malesia-2027-planner-v2`**, per mantenere le modifiche del sito precedente quando l'origine web rimane la stessa. Prima di aggiornare la pagina conviene comunque esportare un backup JSON.
 
-## Pubblicare con GitHub Pages (gratuito, sito pubblico)
+## Trasferire i dati da PC a smartphone
 
-1. Accedi a GitHub e crea un nuovo repository, ad esempio `malesia-2027`, con visibilità **Public**.
-2. Carica **`index.html`** nella **radice** del repository (puoi aggiungere anche questo README, `.nojekyll` e `CREDITI_FOTO.md`). Non caricare soltanto il file ZIP: GitHub Pages deve trovare `index.html`.
-3. Vai su **Settings → Pages** del repository.
-4. In **Build and deployment**, scegli **Deploy from a branch**, poi **main** e **/(root)**. Clicca **Save**.
-5. Il sito sarà disponibile su `https://TUO-USERNAME.github.io/malesia-2027/` una volta pubblicato.
-6. Apri lo stesso indirizzo anche dal telefono. Puoi aggiungerlo alla schermata Home dalle opzioni del browser.
+### Metodo A — Link rapido, consigliato con GitHub Pages
 
-## Se hai già pubblicato la vecchia versione
+1. Sul dispositivo che contiene le modifiche, apri la sezione **Voli & hotel** e vai al riquadro **Backup & trasferimento dati**.
+2. Premi **Copia link di trasferimento** e invialo al secondo dispositivo tramite messaggio privato, AirDrop o un altro metodo fidato.
+3. Sul secondo dispositivo apri quel link: il sito legge il backup dal frammento `#m2027=...`, lo rimuove dalla barra degli indirizzi e **chiede la tua conferma** prima di importarlo.
+4. Dopo la conferma, budget, note, spese e stati prenotato/pagato vengono ricostruiti sul dispositivo di destinazione.
 
-Sostituisci semplicemente `index.html` nel repository, sulla stessa branch di GitHub Pages. Puoi mantenere invariati `README.md`, `.nojekyll` e `CREDITI_FOTO.md`, ma è consigliato aggiornare anche il README. Le spese e le prenotazioni salvate nel browser restano disponibili finché il sito mantiene lo **stesso indirizzo/origine** e la stessa chiave di storage. Esporta comunque un backup JSON prima di aggiornare.
+Il link incorpora **una fotografia dei dati al momento della copia**, compressa con le API native `CompressionStream`/`DecompressionStream`. Non è un indirizzo che rimane sincronizzato in automatico: se modifichi un dispositivo dopo aver generato il link, per trasferire le nuove modifiche devi generarne un altro.
 
-## Dati e sincronizzazione
+**Privacy:** il frammento del link non è inviato al server dalla normale richiesta HTTP, ma può rimanere nei messaggi, nella cronologia o essere letto da chi riceve il link. Può contenere note e riferimenti di prenotazione: condividilo soltanto con persone fidate. Il link ha dimensione limitata; se è troppo lungo o il browser non supporta le API, passa al metodo B.
 
-- La dashboard salva nel `localStorage` del browser: i dati non vengono pubblicati nel repository.
-- Per passare da un dispositivo all'altro, usa **Esporta backup** e poi **Importa backup**.
-- La chiave di archiviazione è **`malesia-2027-planner-v2`**, uguale a quella della dashboard precedente: se apri il nuovo file nella *stessa origine* dei file vecchi, può leggere le modifiche già salvate. Altrimenti esporta il JSON dalla vecchia dashboard e importalo nella nuova.
-- Non salvare password, documenti o dati di pagamento nella pagina. Se il tuo repository è pubblico, i file statici sono visibili a chiunque possieda il link.
-- Prezzi e orari sono indicativi e soggetti a verifica prima delle prenotazioni.
+### Metodo B — File JSON, universale
 
-## Contenuto
+1. Premi **Esporta JSON** per scaricare un file di backup, oppure **Condividi JSON** per aprire la condivisione nativa dove supportata.
+2. Trasferisci il file `.json` al secondo dispositivo.
+3. Apri il sito sul secondo dispositivo e premi **Importa JSON**, selezionando il file. In alternativa premi **Incolla backup o link** e incolla tutto il contenuto JSON.
+4. Prima di importare, il sito **controlla la struttura dei dati** e chiede conferma per sostituire quelli locali.
 
-- Kuala Lumpur: 1–5 luglio (+ ultima notte 14–15 luglio)
-- Kuching e Borneo: 5–8 luglio
-- Perhentian: 8–14 luglio
-- Viaggio A/R Roma: 30 giugno – 16 luglio 2027; partenza da KUL il 15 luglio ore 21:00, arrivo a FCO il 16 luglio ore 14:15 via Doha
-- Pianificazione: due persone, 14 notti in Malesia, totale iniziale di circa 3.410 €
+**Importante:** l'importazione sostituisce i dati presenti nel dispositivo di destinazione; **non unisce automaticamente** due copie modificate separatamente. Se hai modifiche importanti su entrambi i dispositivi, esporta un backup da entrambi prima di decidere quale versione ripristinare.
 
-## Immagini e licenze
+### Che cosa GitHub Pages non fa
 
-Le fotografie remote di Wikimedia Commons hanno crediti e licenze specifici. Vedi la sezione Crediti nel piè di pagina o `CREDITI_FOTO.md`. Le immagini relative a turtle, Nemo Point e altre aree di snorkeling sono **illustrative**, non fotografie verificate di quei punti esatti.
+GitHub Pages ospita i file HTML/CSS/JS, non offre un database di sincronizzazione. **Non è presente un cloud sync continuo** e l'app non invia a GitHub il contenuto del budget o delle prenotazioni. Le modifiche in altre schede della **stessa origine e dello stesso browser** possono aggiornarsi tramite l'evento `storage`; questo non sincronizza dispositivi separati.
 
-## Nota sulla privacy
+## Pubblicazione su GitHub Pages
 
-GitHub Pages è un servizio di hosting statico, non un servizio di sincronizzazione. Il sito è statico, ma l’interfaccia è interattiva grazie a JavaScript eseguito nel browser. Nessun dato della dashboard viene inviato a server dall'applicazione.
+1. Crea un repository pubblico, per esempio `malesia-2027`.
+2. Nella radice del repository carica **`index.html`** (puoi caricare anche `README.md`, `CREDITI_FOTO.md`, `CHANGELOG.md` e `.nojekyll`). Non caricare soltanto il file ZIP: GitHub Pages deve trovare il file HTML.
+3. In **Settings → Pages**, seleziona **Deploy from a branch**; scegli il ramo `main` e la cartella `/(root)`, poi salva.
+4. Dopo il deployment il sito sarà disponibile su `https://TUO-USERNAME.github.io/malesia-2027/`. Apri **lo stesso indirizzo** su PC e smartphone.
+
+Per aggiornare una versione già online, **sostituisci soltanto `index.html`**, mantenendo lo stesso repository e indirizzo. Dopo la pubblicazione, svuota la cache della pagina se continua a comparire la versione precedente.
+
+## Contenuto e compatibilità
+
+- 17 giornate di programma: 30 giugno – 16 luglio 2027.
+- Tre ambientazioni distinte: urbano, rainforest e isole.
+- Galleria foto con navigazione e crediti.
+- Budget modificabile, aggiunta di spese, note, conferme, hotel e tratte aeree.
+- Responsive da 320 px a 1920 px; supporto a tastiera, riduzione delle animazioni e visualizzazione in stampa.
+- Link compresso: browser moderni con `CompressionStream` e `DecompressionStream`; il file JSON rimane l'alternativa compatibile.
+
+## Immagini, attribuzioni e avvertenze
+
+Le fotografie sono caricate da Wikimedia Commons secondo i crediti inclusi in `CREDITI_FOTO.md`. Alcune foto relative a fauna e snorkeling sono **illustrative**, non necessariamente riprese nel punto esatto. Confronta orari, costi e dettagli delle prenotazioni con documenti ufficiali e conferme dei fornitori.
