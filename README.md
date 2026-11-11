@@ -1,65 +1,90 @@
-# Malesia 2027 — Travel Companion · Edition 3.0
+# Malesia 2027 — Firebase Edition 4.0
 
-Un'unica pagina HTML responsive (CSS e JavaScript incorporati) per il viaggio tra **Kuala Lumpur, Kuching/Borneo e Perhentian**. Il progetto contiene itinerario fotografico, 17 giornate, voli, hotel, calcolo del budget, checklist prenotazioni e trasferimento dei dati tra PC e smartphone.
+Sito in una sola pagina statica (`index.html`), con itinerario di 17 giornate, budget, prenotazioni, foto/fallback, login Google e sincronizzazione Firebase opzionale. Tutto HTML, CSS e JavaScript è contenuto nel singolo file, senza build step.
 
-## Le novità della versione 3.0
+## IMPORTANTE: configurazione Firebase indispensabile
 
-- **Foto e fallback esclusivi:** quando una foto reale viene caricata, il JavaScript marca la sua scheda come `has-photo`, il CSS rimuove completamente l'illustrazione di riserva e nasconde il contenuto di fallback. In caso di errore compare solo il disegno incorporato. La logica gestisce immagini già in cache e sorgenti cambiate successivamente.
-- **Hero corretto:** le tre card delle destinazioni sono celle indipendenti di CSS Grid, non elementi sovrapposti e posizionati in assoluto. Le leggere inclinazioni sono puramente decorative e rispettano i dispositivi touch e `prefers-reduced-motion`.
-- **Design system coerente:** tipografia, raggi, ombre, spaziature e pulsanti rifiniti per l'intero sito. Icone di interfaccia raccolte in un solo sprite **SVG inline**; non è richiesta alcuna libreria esterna.
-- **Cronologia finale:** la scheda dell'hotel per la notte 14–15 luglio si trova subito dopo il giorno 15 e prima dei giorni 16 e 17. Il volo di ritorno parte da **Kuala Lumpur (KUL) il 15 luglio 2027 alle 21:00**, con scalo a **Doha (DOH)** e arrivo a **Roma Fiumicino (FCO) il 16 luglio alle 14:15**. Tutti gli orari sono locali e vanno verificati sul biglietto.
-- **Trasferimento dispositivi:** nuovo pannello per JSON, condivisione nativa del file quando disponibile, copia del link compresso, incolla di JSON o link, validazione rigorosa e conferma prima di sostituire dati già salvati. I vecchi JSON del kit sono compatibili.
+La configurazione fornita nel prompt includeva `authDomain: "://firebaseapp.com"` e `databaseURL: "https://firebasedatabase.app"`: non sono URL completi e non possono funzionare.
 
-## Come usare `index.html`
+Nel file `index.html` l'`authDomain` è stato ricostruito usando il `projectId` fornito:
 
-Apri `index.html` direttamente in un browser oppure pubblicalo su GitHub Pages. Tutto il codice applicativo è nel singolo file; non servono server, npm, React o database. Le **fotografie** e i font decorativi sono richiesti a servizi esterni; se manca Internet, le illustrazioni e i font di sistema permettono comunque di leggere il programma e usare il budget.
+```js
+authDomain: 'malesia-2027.firebaseapp.com'
+```
 
-Il budget, le spese, gli stati **prenotato/pagato** e le relative note si salvano in `localStorage`. La chiave resta **`malesia-2027-planner-v2`**, per mantenere le modifiche del sito precedente quando l'origine web rimane la stessa. Prima di aggiornare la pagina conviene comunque esportare un backup JSON.
+**Devi sostituire esattamente questo valore:**
 
-## Trasferire i dati da PC a smartphone
+```js
+databaseURL: 'INSERISCI_DATABASE_URL_DA_FIREBASE_CONSOLE'
+```
 
-### Metodo A — Link rapido, consigliato con GitHub Pages
+con **l'URL esatto** che compare in **Firebase Console > Build > Realtime Database > Data**. Può avere uno dei formati:
 
-1. Sul dispositivo che contiene le modifiche, apri la sezione **Voli & hotel** e vai al riquadro **Backup & trasferimento dati**.
-2. Premi **Copia link di trasferimento** e invialo al secondo dispositivo tramite messaggio privato, AirDrop o un altro metodo fidato.
-3. Sul secondo dispositivo apri quel link: il sito legge il backup dal frammento `#m2027=...`, lo rimuove dalla barra degli indirizzi e **chiede la tua conferma** prima di importarlo.
-4. Dopo la conferma, budget, note, spese e stati prenotato/pagato vengono ricostruiti sul dispositivo di destinazione.
+- `https://NOME_DATABASE.firebaseio.com`
+- `https://NOME_DATABASE.REGIONE.firebasedatabase.app`
 
-Il link incorpora **una fotografia dei dati al momento della copia**, compressa con le API native `CompressionStream`/`DecompressionStream`. Non è un indirizzo che rimane sincronizzato in automatico: se modifichi un dispositivo dopo aver generato il link, per trasferire le nuove modifiche devi generarne un altro.
+Non indovinare la regione o il nome: usa l'URL che Firebase mostra nel tuo progetto.
 
-**Privacy:** il frammento del link non è inviato al server dalla normale richiesta HTTP, ma può rimanere nei messaggi, nella cronologia o essere letto da chi riceve il link. Può contenere note e riferimenti di prenotazione: condividilo soltanto con persone fidate. Il link ha dimensione limitata; se è troppo lungo o il browser non supporta le API, passa al metodo B.
+Senza URL corretto il sito continua a funzionare **solo in locale**, indicando chiaramente che il cloud non è configurato. Non è stato possibile verificare un accesso al database reale perché manca il suo URL preciso.
 
-### Metodo B — File JSON, universale
+## Attiva Google Login
 
-1. Premi **Esporta JSON** per scaricare un file di backup, oppure **Condividi JSON** per aprire la condivisione nativa dove supportata.
-2. Trasferisci il file `.json` al secondo dispositivo.
-3. Apri il sito sul secondo dispositivo e premi **Importa JSON**, selezionando il file. In alternativa premi **Incolla backup o link** e incolla tutto il contenuto JSON.
-4. Prima di importare, il sito **controlla la struttura dei dati** e chiede conferma per sostituire quelli locali.
+1. Vai in **Firebase Console > Authentication > Sign-in method** e abilita **Google**.
+2. Vai in **Authentication > Settings > Authorized domains** e aggiungi il dominio esatto in cui pubblichi il sito, ad esempio `tuo-utente.github.io` (non il percorso `/nome-repository`).
+3. Controlla che il `projectId`, l'`authDomain`, `appId`, ecc. corrispondano alla Web App Firebase del progetto.
+4. Pubblica il sito via HTTPS (GitHub Pages usa HTTPS) e premi **Accedi con Google**. Se il browser blocca il popup, consentilo per il sito.
 
-**Importante:** l'importazione sostituisce i dati presenti nel dispositivo di destinazione; **non unisce automaticamente** due copie modificate separatamente. Se hai modifiche importanti su entrambi i dispositivi, esporta un backup da entrambi prima di decidere quale versione ripristinare.
+## Whitelist email: solo sul server
 
-### Che cosa GitHub Pages non fa
+Il login **non** autorizza da solo l'accesso ai dati. La whitelist deve essere applicata **nelle Security Rules del Realtime Database**. Non mettere whitelist o password nel JavaScript e non impostare `".read": true` o `".write": true` per il database.
 
-GitHub Pages ospita i file HTML/CSS/JS, non offre un database di sincronizzazione. **Non è presente un cloud sync continuo** e l'app non invia a GitHub il contenuto del budget o delle prenotazioni. Le modifiche in altre schede della **stessa origine e dello stesso browser** possono aggiornarsi tramite l'evento `storage`; questo non sincronizza dispositivi separati.
+Se servono regole iniziali, `REGOLE_FIREBASE_ESEMPIO.json` contiene un esempio da personalizzare con le email effettive. Non sostituire automaticamente le tue regole se sono già configurate.
 
-## Pubblicazione su GitHub Pages
+Nodo condiviso dalla pagina: `viaggio_malesia_2027/stato`. Tutti gli account autorizzati lavorano **sullo stesso piano di viaggio**.
 
-1. Crea un repository pubblico, per esempio `malesia-2027`.
-2. Nella radice del repository carica **`index.html`** (puoi caricare anche `README.md`, `CREDITI_FOTO.md`, `CHANGELOG.md` e `.nojekyll`). Non caricare soltanto il file ZIP: GitHub Pages deve trovare il file HTML.
-3. In **Settings → Pages**, seleziona **Deploy from a branch**; scegli il ramo `main` e la cartella `/(root)`, poi salva.
-4. Dopo il deployment il sito sarà disponibile su `https://TUO-USERNAME.github.io/malesia-2027/`. Apri **lo stesso indirizzo** su PC e smartphone.
+La Web API key Firebase visibile nell'HTML è configurazione pubblica. Le chiavi di **service account** e i segreti **non** devono essere inseriti nella pagina.
 
-Per aggiornare una versione già online, **sostituisci soltanto `index.html`**, mantenendo lo stesso repository e indirizzo. Dopo la pubblicazione, svuota la cache della pagina se continua a comparire la versione precedente.
+## Comportamento della sincronizzazione
 
-## Contenuto e compatibilità
+- **Non autenticato:** lettura dell'itinerario e salvataggio in `localStorage`; badge “Accesso richiesto per sync cloud”.
+- **Autenticato e autorizzato:** `onValue` riceve gli aggiornamenti condivisi; `set` salva in Firebase dopo un breve debounce. La UI mostra “Sincronizzato (email)”.
+- **Account senza permessi:** l'errore `PERMISSION_DENIED` non blocca la pagina; la copia locale resta modificabile.
+- **Offline:** le modifiche sono registrate in `localStorage` e in una coda persistente di modifiche non sincronizzate. Alla riconnessione, se il cloud non è stato modificato da altri, vengono inviate.
+- **Conflitto:** se il cloud cambia rispetto all'ultima versione ricevuta mentre hai modifiche locali, il sito mostra la scelta “Usa dati cloud” oppure “Carica dati locali”, con conferma prima di sovrascrivere.
+- **Backup manuali:** Esporta/Importa JSON e il link compresso continuano a funzionare. L'importazione è verificata e chiede conferma.
 
-- 17 giornate di programma: 30 giugno – 16 luglio 2027.
-- Tre ambientazioni distinte: urbano, rainforest e isole.
-- Galleria foto con navigazione e crediti.
-- Budget modificabile, aggiunta di spese, note, conferme, hotel e tratte aeree.
-- Responsive da 320 px a 1920 px; supporto a tastiera, riduzione delle animazioni e visualizzazione in stampa.
-- Link compresso: browser moderni con `CompressionStream` e `DecompressionStream`; il file JSON rimane l'alternativa compatibile.
+### Coerenza e limiti
 
-## Immagini, attribuzioni e avvertenze
+Gli eventi provenienti da `onValue` aggiornano la cache **senza** invocare la funzione di salvataggio cloud: ciò evita i loop di sincronizzazione.
 
-Le fotografie sono caricate da Wikimedia Commons secondo i crediti inclusi in `CREDITI_FOTO.md`. Alcune foto relative a fauna e snorkeling sono **illustrative**, non necessariamente riprese nel punto esatto. Confronta orari, costi e dettagli delle prenotazioni con documenti ufficiali e conferme dei fornitori.
+Il sistema è adatto a un piccolo gruppo di viaggiatori, **non è un editor collaborativo transazionale**. Se due utenti autorizzati modificano il piano esattamente nello stesso momento online, può prevalere l'ultima scrittura al nodo condiviso. La coda offline e il controllo di conflitto riducono, ma non eliminano, questa possibilità. Esporta periodicamente un JSON per sicurezza.
+
+Se cancelli i dati del browser o usi una modalità privata che non mantiene `localStorage`, potresti perdere modifiche locali non ancora sincronizzate. I link di trasferimento e i file JSON possono contenere dettagli delle prenotazioni, quindi condividili privatamente.
+
+## GitHub Pages
+
+1. Crea un repository GitHub e carica `index.html`, `.nojekyll` e, se vuoi, la documentazione.
+2. Vai in **Settings > Pages > Build and deployment**.
+3. Scegli **Deploy from a branch > main > /(root)**.
+4. Apri `https://tuo-utente.github.io/nome-repository/`.
+
+Le foto di Wikimedia Commons vengono richieste online. Quando non si caricano sono usati fallback illustrati incorporati nella pagina; non sono mostrati insieme alle foto correttamente caricate.
+
+## Verifiche della versione 4.0
+
+- Controllo sintattico JavaScript (`node --check`).
+- 17 tappe numerate e tre card header presenti.
+- Rendering responsive su 320, 390, 750, 1024, 1280 e 1920 px: nessuna sovrapposizione delle tre card, nessun overflow orizzontale.
+- Test degli stati delle immagini: valido -> foto senza fallback; errore -> fallback senza foto.
+- Test automatizzati **con Firebase simulato**: Google Login, scrittura, ricezione in tempo reale, assenza di loop `onValue`, conflitto offline, selezione cloud, account non autorizzato e logout.
+- **Non** è stata eseguita una connessione autenticata al progetto Firebase reale.
+
+Il rientro internazionale resta impostato il **15 luglio 2027 alle 21:00 da Kuala Lumpur**, con scalo a **Doha** e arrivo a **Roma Fiumicino il 16 luglio alle 14:15**.
+
+## Fonti tecniche ufficiali
+
+- [Firebase SDK da CDN](https://firebase.google.com/docs/web/alt-setup)
+- [Google Sign-In per il web](https://firebase.google.com/docs/auth/web/google-signin)
+- [Realtime Database: lettura e scrittura](https://firebase.google.com/docs/database/web/read-and-write)
+- [Rilevamento connessione RTDB](https://firebase.google.com/docs/database/web/offline-capabilities)
+- [Security Rules e autenticazione](https://firebase.google.com/docs/rules/rules-and-auth)
