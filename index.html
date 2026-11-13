@@ -3081,6 +3081,24 @@ dialog::backdrop { background:#070410df; }
   mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.85' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12h18m-6-6 6 6-6 6'/%3E%3C/svg%3E");
  }
 }
+/* Finestra nuovo viaggio: pulsante "Aggiungi tratta" piu compatto. */
+.edit-modal .booking-editor-section {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.edit-modal #booking-add-leg {
+  min-width:0;
+  min-height:38px;
+  padding:7px 12px;
+  gap:6px;
+  border-radius:9px;
+  font-size:.8rem;
+  font-weight:600;
+  line-height:1.2;
+}
+.edit-modal #booking-add-leg .ui-icon { width:14px; height:14px; }
 </style>
 </head>
 <body>
